@@ -1,9 +1,19 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./TitleCards.css";
 import cards_data from "../../assets/cards/Cards_data";
 
 const TitleCards = ({ title, category }) => {
+  const [apiData, setApiData] = useState([]);
   const cardsRef = useRef(null);
+
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNWMwMDc4Nzc4ZGVmZGU5N2I1Mjg3YmY3ZGJmNmZlNyIsIm5iZiI6MTc0MDc5MzYzMC42MzM5OTk4LCJzdWIiOiI2N2MyNjcxZTg4NjE1MjQwNDY1M2I5MGIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.VQ3BrSMLHHPDpAgzQ0juRmiY_1cAoixYLPZzUIo8nm4",
+    },
+  };
 
   const handleWheel = (event) => {
     event.preventDefault();
@@ -12,6 +22,15 @@ const TitleCards = ({ title, category }) => {
   };
 
   useEffect(() => {
+    fetch(
+      `https://api.themoviedb.org/3/movie/${
+        category ? category : "now_playing"
+      }?language=en-US&page=1`,
+      options
+    )
+      .then((res) => res.json())
+      .then((res) => setApiData(res.results))
+      .catch((err) => console.error(err));
     const currentRef = cardsRef.current;
     if (currentRef) {
       currentRef.addEventListener("wheel", handleWheel);
@@ -27,11 +46,18 @@ const TitleCards = ({ title, category }) => {
     <div className="titlecards">
       <h2>{title ? title : "Popular on Netflix"}</h2>
       <div className="card-list" ref={cardsRef}>
-        {cards_data.map((cards, index) => {
+        {apiData.map((cards, index) => {
           return (
             <div className="card" key={index}>
-              <img src={cards.image} alt="" />
-              <p>{cards.name}</p>
+              <img
+                src={
+                  "https://image.tmdb.org/t/p/w500/" +
+                  (cards.backdrop_path || cards.poster_path)
+                }
+                alt=""
+              />
+
+              <p>{cards.original_title}</p>
             </div>
           );
         })}
