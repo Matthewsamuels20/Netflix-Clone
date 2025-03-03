@@ -3,16 +3,19 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut} from "firebase/auth";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID,
-  measurementId: process.env.FIREBASE_MEASUREMENT_ID
+    apiKey: "AIzaSyDaAWIBEr-0gWoJRmiKrdf42hMSJwVtrxo",
+    authDomain: "netflix-clone-aac83.firebaseapp.com",
+    projectId: "netflix-clone-aac83",
+    storageBucket: "netflix-clone-aac83.firebasestorage.app",
+    messagingSenderId: "998693065226",
+    appId: "1:998693065226:web:8bf0d4105ddfa830e005f3",
+    measurementId: "G-88M606CTW7"
 };
+  
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -32,7 +35,7 @@ const signup = async (name, email, password) => {
         })
     }catch(error) {
         console.log(error);
-        alert(error);
+        toast.error(error.code.split('/')[1].split('-').join(" "));
     }
 }
 
@@ -41,7 +44,7 @@ const login = async (email, password) => {
         await signInWithEmailAndPassword(auth, email, password);
     }catch(error){
         console.log(error);
-        alert(error);
+        toast.error(error.code.split('/')[1].split('-').join(" "));
     }
 }
 
@@ -50,7 +53,7 @@ const logout = async () => {
         await signOut(auth);
     }catch(error){
         console.log(error);
-        alert(error);
+        toast.error(error.code.split('/')[1].split('-').join(" "));
     }
 }
 
